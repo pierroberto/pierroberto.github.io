@@ -1,0 +1,159 @@
+body {
+     background: #222;
+     color: #ddd;
+     font-family: Exo;
+     text-shadow: 0 -1px 0 #000;
+   }
+   
+   h1,
+   h2 {
+     color: #ff0;
+     text-shadow: 0 -3px 3px #000;
+     font-weight: normal;
+   }
+   
+   .wrapper {
+     max-width: 600px;
+     padding: 0 20px;
+     margin: 0 auto;
+   }
+   
+   .pacman-holder {
+     position: relative;
+     width: 200px;
+   }
+   
+   .pacman-container {
+     display: block;
+     width: 50px; /* updated to match the actual size */
+     height: 50px; /* updated to match the actual size */
+     -webkit-transform: rotate(45deg);
+     -moz-transform: rotate(45deg);
+     -o-transform: rotate(45deg);
+     transform: rotate(45deg);
+     -moz-animation: bite 0.5s linear infinite;
+     -webkit-animation: bite 0.5s linear infinite;
+     animation: bite 0.5s linear infinite;
+   }
+   
+   .pacman-body {
+     background-color: #ff0;
+     position: absolute;
+     width: 50px; /* updated to match the actual size */
+     height: 50px; /* updated to match the actual size */
+     -moz-border-radius: 25px; /* updated to match the actual size */
+     -webkit-border-radius: 25px; /* updated to match the actual size */
+     -o-border-radius: 25px; /* updated to match the actual size */
+     border-radius: 25px; /* updated to match the actual size */
+   }
+   
+   .pacman {
+     position: absolute;
+     width: 50px; /* updated to match the actual size */
+     height: 50px; /* updated to match the actual size */
+     -moz-border-radius: 25px; /* updated to match the actual size */
+     -webkit-border-radius: 25px; /* updated to match the actual size */
+     -o-border-radius: 25px; /* updated to match the actual size */
+     border-radius: 25px; /* updated to match the actual size */
+     clip: rect(0px, 25px, 50px, 0px); /* updated to match the actual size */
+     z-index: 2;
+   }
+   
+   .pacman-mouth {
+     position: absolute;
+     left: 1px;
+     width: 52px;
+     height: 52px;
+     -moz-border-radius: 25px;
+     -webkit-border-radius: 25px;
+     -o-border-radius: 25px;
+     border-radius: 25px;
+     clip: rect(0px, 50px, 50px, 26px);
+   }
+   
+   .pacman-mouth .pacman {
+     background-color: #222;
+     -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+     -o-transform: rotate(90deg);
+     transform: rotate(90deg);
+     -moz-animation: munch 0.5s linear infinite;
+     -webkit-animation: munch 0.5s linear infinite;
+     animation: munch 0.5s linear infinite;
+   
+     /* To fix a yellow border on pacman's mouth */
+     border: 3px solid #222;
+   }
+   
+   @-moz-keyframes munch {
+     0% {
+       -moz-transform: rotate(90deg);
+     }
+     50% {
+       -moz-transform: rotate(0deg);
+     }
+     100% {
+       -moz-transform: rotate(90deg);
+     }
+   }
+   
+   @-webkit-keyframes munch {
+     0% {
+       -webkit-transform: rotate(90deg);
+     }
+     50% {
+       -webkit-transform: rotate(0deg);
+     }
+     100% {
+       -webkit-transform: rotate(90deg);
+     }
+   }
+   
+   @keyframes munch {
+     0% {
+       transform: rotate(90deg);
+     }
+     50% {
+       transform: rotate(0deg);
+     }
+     100% {
+       transform: rotate(90deg);
+     }
+   }
+   
+   @-moz-keyframes bite {
+     0% {
+       -moz-transform: rotate(45deg);
+     }
+     50% {
+       -moz-transform: rotate(90deg);
+     }
+     100% {
+       -moz-transform: rotate(45deg);
+     }
+   }
+   
+   @-webkit-keyframes bite {
+     0% {
+       -webkit-transform: rotate(45deg);
+     }
+     50% {
+       -webkit-transform: rotate(90deg);
+     }
+     100% {
+       -webkit-transform: rotate(45deg);
+     }
+   }
+   
+   @keyframes bite {
+     0% {
+       transform: rotate(45deg);
+     }
+     50% {
+       transform: rotate(90deg);
+     }
+     100% {
+       transform: rotate(45deg);
+     }
+   }
+   

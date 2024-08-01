@@ -1,0 +1,22 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #222;
+}
+
+.score {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.terminal {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  
+}

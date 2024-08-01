@@ -1,0 +1,30 @@
+/* Terminal Styles */
+.terminal {
+  font-family: monospace;
+  background-color: #000000;
+  color: #00FF00;
+  padding: 20px;
+  border-radius: 5px;
+  width: 200px;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+/* Blinking Cursor */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background-color: #00FF00;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  from, to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #00FF00;
+  }
+}
