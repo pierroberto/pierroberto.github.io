@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import cherrySrc from '../../../src/assets/cherry.png';
 import pacmanSrc from '../../../src/assets/pacman.png';
 import { Dot } from '../../models/Dot';
 import { fullDots } from '../../state/fullDots';
@@ -84,9 +85,14 @@ export const App: React.FC = () => {
             </FullDot>
           ))}
         </div>
-        <div style={{display:'flex', width:'500px', marginTop: '10px'}}>
-          <img src={pacmanSrc} width={20} height={20} />
-          <img src={pacmanSrc} width={20} height={20} />
+        <div style={{display:'flex', width:'500px', marginTop: '10px', justifyContent:'space-between'}}>
+          <div>
+            <img src={pacmanSrc} width={25} height={25} />
+            <img src={pacmanSrc} width={25} height={25} />
+          </div>
+          <div>
+            <img src={cherrySrc} width={25} height={25} />
+          </div>
         </div>
       </div>
       <div className="score">Score: {score} </div>
