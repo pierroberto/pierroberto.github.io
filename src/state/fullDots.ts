@@ -1,4 +1,5 @@
-import { Dot } from "../models/Dot";
+import { Dot, Dot2 } from "../models/Dot";
+import { LinkedList } from "../models/LinkedList";
 
 
 const centerX: number = 250;
@@ -32,6 +33,29 @@ const titles: string[] = ['Facile.it', 'NTTData', 'Auriga', 'ZenDama', 'Hasselt'
 const outerCircle: Dot[] = generateCircleCoordinates(centerX, centerY, radius1, pointsPerCircle, titles, 0);
 const middleCircle: Dot[] = generateCircleCoordinates(centerX, centerY, radius2, pointsPerCircle, titles, 4, middleCircleRotation);
 const innerCircle: Dot[] = generateCircleCoordinates(centerX, centerY, radius3, pointsPerCircle, titles, 8);
+
+export const dots:LinkedList<Dot2> = 
+  {
+    current:[{   x: 50,
+        y: 150,
+        title: 'A',
+        id:'A',
+        text:'A',
+        hidden: false
+    }], 
+    next:{current:[{   x: 50,
+      y: 250,
+      title: 'A',
+      id:'A',
+      text:'A',
+      hidden: true
+  },{   x: 100,
+    y: 250,
+    title: 'A',
+    id:'A',
+    text:'A',
+    hidden: true
+}], next:null}}
 
 export const fullDots: Dot[] = [...outerCircle, ...middleCircle, ...innerCircle];
 

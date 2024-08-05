@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import cherrySrc from '../../../src/assets/cherry.png';
 import pacmanSrc from '../../../src/assets/pacman.png';
 import { Dot } from '../../models/Dot';
-import { fullDots } from '../../state/fullDots';
+import { dots } from '../../state/fullDots';
 import { FullDot } from '../atoms/FullDot';
 import { Pacman } from '../atoms/Pacman';
 import { Terminal } from '../atoms/Terminal';
@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   const [angle, setAngle] = useState(0);
   const [dotId, setDotId] = useState<Dot | null>(null);
   const [isMoving, setIsMoving] = useState(false);
-
+const [fullDots, setFullDots] = useState(dots)
   const pacmanRadius = 1; // Radius of the Pacman
   const dotRadius = 20; // Radius of the Dot
 
@@ -47,13 +47,14 @@ export const App: React.FC = () => {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         // Stop when Pacman touches the dot
-        //distance <= pacmanRadius + dotRadius
         console.log(distance)
         if (distance <= pacmanRadius + dotRadius) {
           setScore((score) => score + 1);
           setDotId(targetDot); // Save dot ID to state
           setTargetDot(null);
           setIsMoving(false);
+          setFullDots(((prev) => { 
+            return {...prev , current: [...prev.current, ...prev.next ? [...prev.next.current]: []]}}))
           clearInterval(moveInterval);
           return prevPosition;
         }
@@ -75,15 +76,15 @@ export const App: React.FC = () => {
 
   return (
     <div className="App">
-      <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+      
+      <div style={{display:'flex', height:'100%', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
         <div style={{ border: 'thick double #1919A6', width: '500px', height: '500px' }}>
           <Pacman x={pacmanPosition.x} y={pacmanPosition.y} angle={angle} />
-
-          {fullDots.map((value, index) => (
-            <FullDot key={index}  id={value.id} title={value.title} x={value.x} y={value.y} onClick={() => handleDotClick({ x: value.x, y: value.y, id: value.id, title: value.title, text:value.text })}>
+            {fullDots.current.map((value, index)=> (<FullDot key={index}  id={value.id} title={value.title} x={value.x} y={value.y} onClick={() => handleDotClick({ x: value.x, y: value.y, id: value.id, title: value.title, text:value.text })}>
               <div></div>
-            </FullDot>
-          ))}
+            </FullDot>))}
+
+
         </div>
         <div style={{display:'flex', width:'500px', marginTop: '10px', justifyContent:'space-between'}}>
           <div>
@@ -99,8 +100,7 @@ export const App: React.FC = () => {
       <div className='terminal'>
 
         {dotId?.text && <Terminal text={dotId.text}/>}
-      </div>
-
+      </div>  
     </div>
   );
 };

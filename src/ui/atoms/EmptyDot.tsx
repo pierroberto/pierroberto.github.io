@@ -4,14 +4,13 @@ interface DotProps {
   x: number;
   y: number;
   onClick: () => void;
-
 }
 
 export const EmptyDot: React.FC<DotProps> = ({ x, y, onClick }) => {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: 'relative',
         left: x,
         top: y,
         width: 10, 
