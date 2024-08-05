@@ -13,7 +13,7 @@ export const EmptyDot: React.FC<DotProps> = ({ x, y, onClick }) => {
         position: 'relative',
         left: x,
         top: y,
-        width: 10, 
+        width: 10,
         height: 10,
         backgroundColor: 'white',
         borderRadius: '50%',

@@ -10,11 +10,19 @@ interface FullDotProps {
   id: string;
 }
 
-export const FullDot: React.FC<FullDotProps> = ({ x, y, title, children, onClick }) => {
+export const FullDot: React.FC<FullDotProps> = ({
+  x,
+  y,
+  title,
+  children,
+  onClick,
+}) => {
   return (
-    <div style={{position:'relative'}}>
+    <div style={{ position: 'relative' }}>
       <div className="full-dot" style={{ left: x, top: y }} onClick={onClick} />
-      <div style={{ position: 'absolute', left: x - 10, top: y + 20 }}>{title}</div>
+      <div style={{ position: 'absolute', left: x - 10, top: y + 20 }}>
+        {title}
+      </div>
     </div>
   );
 };

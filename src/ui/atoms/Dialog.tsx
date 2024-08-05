@@ -13,11 +13,11 @@ export const Dialog: React.FC<DialogProps> = ({ title, onClose, children }) => {
       <div className="dialog-container">
         <div className="dialog-header">
           <h2>{title}</h2>
-          <button className="close-button" onClick={onClose}>X</button>
+          <button className="close-button" onClick={onClose}>
+            X
+          </button>
         </div>
-        <div className="dialog-content">
-          {children}
-        </div>
+        <div className="dialog-content">{children}</div>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   const [angle, setAngle] = useState(0);
   const [dotId, setDotId] = useState<Dot | null>(null);
   const [isMoving, setIsMoving] = useState(false);
-const [fullDots, setFullDots] = useState(dots)
+  const [fullDots, setFullDots] = useState(dots);
   const pacmanRadius = 1; // Radius of the Pacman
   const dotRadius = 20; // Radius of the Dot
 
@@ -47,14 +47,21 @@ const [fullDots, setFullDots] = useState(dots)
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         // Stop when Pacman touches the dot
-        console.log(distance)
+        console.log(distance);
         if (distance <= pacmanRadius + dotRadius) {
           setScore((score) => score + 1);
           setDotId(targetDot); // Save dot ID to state
           setTargetDot(null);
           setIsMoving(false);
-          setFullDots(((prev) => { 
-            return {...prev , current: [...prev.current, ...prev.next ? [...prev.next.current]: []]}}))
+          setFullDots((prev) => {
+            return {
+              ...prev,
+              current: [
+                ...prev.current,
+                ...(prev.next ? [...prev.next.current] : []),
+              ],
+            };
+          });
           clearInterval(moveInterval);
           return prevPosition;
         }
@@ -68,7 +75,13 @@ const [fullDots, setFullDots] = useState(dots)
     }, 50); // Decrease interval time to make Pacman faster
 
     return () => clearInterval(moveInterval);
-  }, [isMoving, targetDot?.x, targetDot?.y, pacmanPosition.x, pacmanPosition.y]);
+  }, [
+    isMoving,
+    targetDot?.x,
+    targetDot?.y,
+    pacmanPosition.x,
+    pacmanPosition.y,
+  ]);
 
   const handleDotClick = (dot: Dot) => {
     setTargetDot(dot);
@@ -76,17 +89,52 @@ const [fullDots, setFullDots] = useState(dots)
 
   return (
     <div className="App">
-      
-      <div style={{display:'flex', height:'100%', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
-        <div style={{ border: 'thick double #1919A6', width: '500px', height: '500px' }}>
+      <div
+        style={{
+          display: 'flex',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <div
+          style={{
+            border: 'thick double #1919A6',
+            width: '500px',
+            height: '500px',
+          }}
+        >
           <Pacman x={pacmanPosition.x} y={pacmanPosition.y} angle={angle} />
-            {fullDots.current.map((value, index)=> (<FullDot key={index}  id={value.id} title={value.title} x={value.x} y={value.y} onClick={() => handleDotClick({ x: value.x, y: value.y, id: value.id, title: value.title, text:value.text })}>
+          {fullDots.current.map((value, index) => (
+            <FullDot
+              key={index}
+              id={value.id}
+              title={value.title}
+              x={value.x}
+              y={value.y}
+              onClick={() =>
+                handleDotClick({
+                  x: value.x,
+                  y: value.y,
+                  id: value.id,
+                  title: value.title,
+                  text: value.text,
+                })
+              }
+            >
               <div></div>
-            </FullDot>))}
-
-
+            </FullDot>
+          ))}
         </div>
-        <div style={{display:'flex', width:'500px', marginTop: '10px', justifyContent:'space-between'}}>
+        <div
+          style={{
+            display: 'flex',
+            width: '500px',
+            marginTop: '10px',
+            justifyContent: 'space-between',
+          }}
+        >
           <div>
             <img src={pacmanSrc} width={25} height={25} />
             <img src={pacmanSrc} width={25} height={25} />
@@ -97,10 +145,9 @@ const [fullDots, setFullDots] = useState(dots)
         </div>
       </div>
       <div className="score">Score: {score} </div>
-      <div className='terminal'>
-
-        {dotId?.text && <Terminal text={dotId.text}/>}
-      </div>  
+      <div className="terminal">
+        {dotId?.text && <Terminal text={dotId.text} />}
+      </div>
     </div>
   );
 };

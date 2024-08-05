@@ -3,10 +3,11 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { App } from './ui/pages/App';
 
-const container = document.getElementById('root')
-const root = createRoot(container!)
+const container = document.getElementById('root');
+const root = createRoot(container!);
 
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>);
+  </React.StrictMode>,
+);
