@@ -11,7 +11,7 @@ interface FullDotProps {
 
 export const FullDot: React.FC<FullDotProps> = ({ x, y, title, onClick }) => {
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'absolute' }}>
       <div
         className="full-dot"
         style={{ left: x - 10, top: y + 10 }}
