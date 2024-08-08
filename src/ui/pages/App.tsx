@@ -1,91 +1,173 @@
 import React, { useEffect, useState } from 'react';
 import cherrySrc from '../../../src/assets/cherry.png';
 import pacmanSrc from '../../../src/assets/pacman.png';
-import { Dot } from '../../models/Dot';
-import { dots } from '../../state/fullDots';
+import { Dot, dots } from '../../models/Dot';
 import { FullDot } from '../atoms/FullDot';
 import { Pacman } from '../atoms/Pacman';
 import { Terminal } from '../atoms/Terminal';
 import './App.css';
+import { PacmanService } from '../../models/Pacman';
+import { Coordinates } from '../../models/Coordinates';
+import pacmanMouthSrc from '../../assets/pacmanMouth.wav';
+import { useWithSound } from '../../models/withSound';
 
-export const App: React.FC = () => {
-  const [pacmanPosition, setPacmanPosition] = useState({ x: 100, y: 100 });
-  const [score, setScore] = useState(0);
-  const [targetDot, setTargetDot] = useState<Dot | null>(null);
-  const [angle, setAngle] = useState(0);
-  const [dotId, setDotId] = useState<Dot | null>(null);
-  const [isMoving, setIsMoving] = useState(false);
-  const [fullDots, setFullDots] = useState(dots);
-  const pacmanRadius = 1; // Radius of the Pacman
-  const dotRadius = 20; // Radius of the Dot
+type KeyArrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 
-  useEffect(() => {
-    if (!targetDot) return;
+const rotate = (key: KeyArrow, defaultDeg: number) => {
+  switch (key) {
+    case 'ArrowUp':
+      return { deg: -90, key };
+    case 'ArrowRight':
+      return { deg: 0, key };
+    case 'ArrowDown':
+      return { deg: 90, key };
+    case 'ArrowLeft':
+      return { deg: 180, key };
+    default:
+      return { deg: defaultDeg, key };
+  }
+};
 
-    // Calculate angle
-    const dx = targetDot.x - pacmanPosition.x;
-    const dy = targetDot.y - pacmanPosition.y;
-    const newAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-    setAngle(newAngle);
+const handleKeyDown =
+  (
+    setPacmanPosition: React.Dispatch<React.SetStateAction<Coordinates>>,
+    setAngle: React.Dispatch<React.SetStateAction<SetAngle>>,
+    sound: any,
+  ) =>
+  (e: KeyboardEvent) => {
+    const ACCELARATION = 20;
 
-    // Rotation phase
-    const rotateTimeout = setTimeout(() => {
-      setIsMoving(true);
-    }, 200); // Adjust this duration to ensure complete rotation
-
-    return () => clearTimeout(rotateTimeout);
-  }, [targetDot]);
-
-  useEffect(() => {
-    if (!isMoving || !targetDot) return;
-
-    const moveInterval = setInterval(() => {
-      setPacmanPosition((prevPosition) => {
-        const { x, y } = prevPosition;
-        const dx = targetDot.x - x;
-        const dy = targetDot.y - y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        // Stop when Pacman touches the dot
-        console.log(distance);
-        if (distance <= pacmanRadius + dotRadius) {
-          setScore((score) => score + 1);
-          setDotId(targetDot); // Save dot ID to state
-          setTargetDot(null);
-          setIsMoving(false);
-          setFullDots((prev) => {
-            return {
-              ...prev,
-              current: [
-                ...prev.current,
-                ...(prev.next ? [...prev.next.current] : []),
-              ],
-            };
-          });
-          clearInterval(moveInterval);
-          return prevPosition;
-        }
-
-        const angle = Math.atan2(dy, dx);
-        return {
-          x: x + Math.cos(angle) * 10, // Increase speed by moving 10 units per interval
-          y: y + Math.sin(angle) * 10, // Increase speed by moving 10 units per interval
-        };
-      });
-    }, 50); // Decrease interval time to make Pacman faster
-
-    return () => clearInterval(moveInterval);
-  }, [
-    isMoving,
-    targetDot?.x,
-    targetDot?.y,
-    pacmanPosition.x,
-    pacmanPosition.y,
-  ]);
-
-  const handleDotClick = (dot: Dot) => {
-    setTargetDot(dot);
+    switch (e.key) {
+      case 'ArrowUp':
+        sound().play();
+        setAngle((previousAngle) => rotate('ArrowUp', previousAngle.deg));
+        setPacmanPosition((prev) => {
+          return { x: prev.x, y: prev.y - ACCELARATION };
+        });
+        break;
+      case 'ArrowDown':
+        sound().play();
+        setAngle((previousAngle) => rotate('ArrowDown', previousAngle.deg));
+        setPacmanPosition((prev) => {
+          return { x: prev.x, y: prev.y + ACCELARATION };
+        });
+        break;
+      case 'ArrowLeft':
+        sound().play();
+        setAngle((previousAngle) => rotate('ArrowLeft', previousAngle.deg));
+        setPacmanPosition((prev) => {
+          return { x: prev.x - ACCELARATION, y: prev.y };
+        });
+        break;
+      case 'ArrowRight':
+        sound().play();
+        setAngle((previousAngle) => rotate('ArrowRight', previousAngle.deg));
+        setPacmanPosition((prev) => {
+          return { x: prev.x + ACCELARATION, y: prev.y };
+        });
+    }
   };
+
+type SetAngle = { deg: number; key: KeyArrow };
+
+export const App: React.FC<{ pacman: PacmanService }> = () => {
+  const [pacmanPosition, setPacmanPosition] = useState({ x: 0, y: 0 });
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const playMouthSound = useWithSound(pacmanMouthSrc);
+  const [score, setScore] = useState(0);
+  const [angle, setAngle] = useState<SetAngle>({
+    deg: 0,
+    key: 'ArrowRight',
+  });
+  const [selectedDot, selectDot] = useState<Dot | null>(null);
+  const [fullDots, setFullDots] = useState(dots);
+
+  useEffect(() => {
+    const s = playMouthSound();
+    if (!s) {
+      return;
+    }
+
+    if (audioEnabled) {
+      s.volume = 1;
+    } else {
+      s.volume = 0;
+    }
+  }, [audioEnabled]);
+
+  useEffect(() => {
+    document.addEventListener(
+      'keydown',
+      handleKeyDown(setPacmanPosition, setAngle, playMouthSound),
+    );
+
+    return () => {
+      document.removeEventListener(
+        'keydown',
+        handleKeyDown(setPacmanPosition, setAngle, playMouthSound),
+      );
+    };
+  }, []);
+
+  function replaceObjectAtIndex(
+    array: Array<Dot>,
+    index: number,
+    newObject: Dot,
+  ) {
+    // Check if the index is within the bounds of the array
+    if (index < 0 || index >= array.length) {
+      throw new Error('Index out of bounds');
+    }
+
+    // Create a new array with the object at the given index replaced
+    const newArray = [...array]; // Create a shallow copy of the array
+    newArray[index] = newObject; // Replace the object at the given index with the new object
+
+    return newArray;
+  }
+
+  useEffect(() => {
+    const filteredDots = fullDots
+      .map((dot, index) => {
+        return {
+          ...dot,
+          index,
+          diffX: Math.abs(dot.centroid.x - (pacmanPosition.x + 25)),
+          diffY: Math.abs(dot.centroid.y - (pacmanPosition.y + 25)),
+        };
+      })
+
+      .filter((dot) => dot.diffX <= 30 && dot.diffY <= 30);
+    let hitDot: (Dot & { index: number }) | null = null;
+    if (filteredDots.length > 0) {
+      hitDot = filteredDots.reduce((lowest, current) => {
+        const currentCombinedDiff = current.diffX + current.diffY;
+        const lowestCombinedDiff = lowest.diffX + lowest.diffY;
+
+        return currentCombinedDiff < lowestCombinedDiff ? current : lowest;
+      });
+    }
+    if (hitDot) {
+      if (hitDot.hit) {
+        selectDot(hitDot);
+      }
+      const newDot: Dot = { ...hitDot, hidden: false, hit: true };
+      let x = replaceObjectAtIndex(fullDots, hitDot.index, newDot);
+
+      const unlockedDots: Array<Dot> = hitDot.next.reduce((acc, nextDotId) => {
+        const d2 = fullDots.find((d) => d.id === nextDotId);
+        return d2 ? [...acc, { ...d2, hidden: false }] : acc;
+      }, [] as Array<Dot>);
+
+      unlockedDots.forEach((dotToUnlock) => {
+        const dotIndex = fullDots.findIndex((d) => d.id === dotToUnlock.id);
+        if (dotIndex > -1) {
+          x = replaceObjectAtIndex(fullDots, dotIndex, dotToUnlock);
+        }
+      });
+      setFullDots(x);
+    }
+  }, [pacmanPosition.x, pacmanPosition.y]);
 
   return (
     <div className="App">
@@ -105,27 +187,22 @@ export const App: React.FC = () => {
             height: '500px',
           }}
         >
-          <Pacman x={pacmanPosition.x} y={pacmanPosition.y} angle={angle} />
-          {fullDots.current.map((value, index) => (
-            <FullDot
-              key={index}
-              id={value.id}
-              title={value.title}
-              x={value.x}
-              y={value.y}
-              onClick={() =>
-                handleDotClick({
-                  x: value.x,
-                  y: value.y,
-                  id: value.id,
-                  title: value.title,
-                  text: value.text,
-                })
-              }
-            >
-              <div></div>
-            </FullDot>
-          ))}
+          <Pacman x={pacmanPosition.x} y={pacmanPosition.y} angle={angle.deg} />
+
+          {fullDots.map((value, index) =>
+            value.hidden ? null : (
+              <FullDot
+                key={index}
+                id={value.id}
+                title={value.title}
+                x={value.centroid.x}
+                y={value.centroid.y}
+                onClick={() => {}}
+              >
+                <div></div>
+              </FullDot>
+            ),
+          )}
         </div>
         <div
           style={{
@@ -144,9 +221,17 @@ export const App: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="score">Score: {score} </div>
+      <div className="score">
+        Score: {score}{' '}
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => setAudioEnabled((prev) => !prev)}
+        >
+          Sound {audioEnabled ? 'enabled' : 'disabled'}
+        </div>{' '}
+      </div>
       <div className="terminal">
-        {dotId?.text && <Terminal text={dotId.text} />}
+        {selectedDot && <Terminal text={selectedDot.text} />}
       </div>
     </div>
   );

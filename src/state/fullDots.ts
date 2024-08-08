@@ -63,45 +63,18 @@ const titles: string[] = [
   'NodeJS',
 ];
 
-const outerCircle: Dot[] = generateCircleCoordinates(
-  centerX,
-  centerY,
-  radius1,
-  pointsPerCircle,
-  titles,
-  0,
-);
-const middleCircle: Dot[] = generateCircleCoordinates(
-  centerX,
-  centerY,
-  radius2,
-  pointsPerCircle,
-  titles,
-  4,
-  middleCircleRotation,
-);
-const innerCircle: Dot[] = generateCircleCoordinates(
-  centerX,
-  centerY,
-  radius3,
-  pointsPerCircle,
-  titles,
-  8,
-);
-
-export const dots: LinkedList<Dot2> = {
+export const dots2: LinkedList<Dot2> = {
   current: [{ x: 50, y: 150, title: 'A', id: 'A', text: 'A', hidden: false }],
   next: {
     current: [
       { x: 50, y: 250, title: 'A', id: 'A', text: 'A', hidden: true },
       { x: 100, y: 250, title: 'A', id: 'A', text: 'A', hidden: true },
     ],
-    next: null,
+    next: {
+      current: [
+        { x: 150, y: 350, title: 'B', id: 'B', text: 'B', hidden: true },
+      ],
+      next: null,
+    },
   },
 };
-
-export const fullDots: Dot[] = [
-  ...outerCircle,
-  ...middleCircle,
-  ...innerCircle,
-];
