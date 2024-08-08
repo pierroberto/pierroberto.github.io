@@ -128,46 +128,48 @@ export const App: React.FC<{ pacman: PacmanService }> = () => {
 
   useEffect(() => {
     const filteredDots = fullDots
-      .map((dot, index) => {
-        return {
-          ...dot,
-          index,
-          diffX: Math.abs(dot.centroid.x - (pacmanPosition.x + 25)),
-          diffY: Math.abs(dot.centroid.y - (pacmanPosition.y + 25)),
-        };
-      })
+      .map((dot, index) => ({
+        ...dot,
+        index,
+        diffX: Math.abs(dot.centroid.x - (pacmanPosition.x + 25)),
+        diffY: Math.abs(dot.centroid.y - (pacmanPosition.y - 25)),
+      }))
+      .filter((dot) => dot.diffX <= 30 && dot.diffY <= 30 && !dot.hidden); // Only consider visible dots
 
-      .filter((dot) => dot.diffX <= 30 && dot.diffY <= 30);
     let hitDot: (Dot & { index: number }) | null = null;
+
     if (filteredDots.length > 0) {
       hitDot = filteredDots.reduce((lowest, current) => {
         const currentCombinedDiff = current.diffX + current.diffY;
         const lowestCombinedDiff = lowest.diffX + lowest.diffY;
-
         return currentCombinedDiff < lowestCombinedDiff ? current : lowest;
       });
     }
+
     if (hitDot) {
-      if (hitDot.hit) {
-        selectDot(hitDot);
+      selectDot(hitDot); // Select the dot even if it was already hit
+
+      if (!hitDot.hit) {
+        const newDot: Dot = { ...hitDot, hidden: false, hit: true };
+        let updatedDots = replaceObjectAtIndex(fullDots, hitDot.index, newDot);
+
+        // Unlock dots specified in the `next` key
+        hitDot.next.forEach((nextDotId) => {
+          const nextDotIndex = fullDots.findIndex((d) => d.id === nextDotId);
+          if (nextDotIndex > -1) {
+            const nextDot = { ...fullDots[nextDotIndex], hidden: false };
+            updatedDots = replaceObjectAtIndex(
+              updatedDots,
+              nextDotIndex,
+              nextDot,
+            );
+          }
+        });
+
+        setFullDots(updatedDots);
       }
-      const newDot: Dot = { ...hitDot, hidden: false, hit: true };
-      let x = replaceObjectAtIndex(fullDots, hitDot.index, newDot);
-
-      const unlockedDots: Array<Dot> = hitDot.next.reduce((acc, nextDotId) => {
-        const d2 = fullDots.find((d) => d.id === nextDotId);
-        return d2 ? [...acc, { ...d2, hidden: false }] : acc;
-      }, [] as Array<Dot>);
-
-      unlockedDots.forEach((dotToUnlock) => {
-        const dotIndex = fullDots.findIndex((d) => d.id === dotToUnlock.id);
-        if (dotIndex > -1) {
-          x = replaceObjectAtIndex(fullDots, dotIndex, dotToUnlock);
-        }
-      });
-      setFullDots(x);
     }
-  }, [pacmanPosition.x, pacmanPosition.y]);
+  }, [pacmanPosition.x, pacmanPosition.y, fullDots]);
 
   return (
     <div className="App">
