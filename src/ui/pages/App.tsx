@@ -6,7 +6,6 @@ import { FullDot } from '../atoms/FullDot';
 import { Pacman } from '../atoms/Pacman';
 import { Terminal } from '../atoms/Terminal';
 import './App.css';
-import { PacmanService } from '../../models/Pacman';
 import { Coordinates } from '../../models/Coordinates';
 import pacmanMouthSrc from '../../assets/pacmanMouth.wav';
 import { useWithSound } from '../../models/withSound';
@@ -70,7 +69,7 @@ const handleKeyDown =
 
 type SetAngle = { deg: number; key: KeyArrow };
 
-export const App: React.FC<{ pacman: PacmanService }> = () => {
+export const App: React.FC = () => {
   const [pacmanPosition, setPacmanPosition] = useState({ x: 0, y: 0 });
   const [audioEnabled, setAudioEnabled] = useState(false);
   const playMouthSound = useWithSound(pacmanMouthSrc);
