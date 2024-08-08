@@ -8,7 +8,7 @@ import { Terminal } from '../atoms/Terminal';
 import './App.css';
 import { Coordinates } from '../../models/Coordinates';
 import pacmanMouthSrc from '../../assets/pacmanMouth.wav';
-import { useWithSound } from '../../models/withSound';
+import { useWithSound } from '../../hooks/withSound';
 import { dots } from '../../state/dots';
 
 type KeyArrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
@@ -200,9 +200,7 @@ export const App: React.FC = () => {
                 x={value.centroid.x}
                 y={value.centroid.y}
                 onClick={() => {}}
-              >
-                <div></div>
-              </FullDot>
+              />
             ),
           )}
         </div>
