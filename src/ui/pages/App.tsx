@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cherrySrc from '../../../src/assets/cherry.png';
 import pacmanSrc from '../../../src/assets/pacman.png';
-import { Dot, dots } from '../../models/Dot';
+import { Dot } from '../../models/Dot';
 import { FullDot } from '../atoms/FullDot';
 import { Pacman } from '../atoms/Pacman';
 import { Terminal } from '../atoms/Terminal';
@@ -9,6 +9,7 @@ import './App.css';
 import { Coordinates } from '../../models/Coordinates';
 import pacmanMouthSrc from '../../assets/pacmanMouth.wav';
 import { useWithSound } from '../../models/withSound';
+import { dots } from '../../state/dots';
 
 type KeyArrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 

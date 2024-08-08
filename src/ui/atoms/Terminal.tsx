@@ -21,7 +21,7 @@ export const Terminal: React.FC<TerminalProps> = ({ text }) => {
         clearInterval(typingInterval);
         setIsBlinking(false);
       }
-    }, 30); // Adjust the typing speed here
+    }, 20); // Adjust the typing speed here
 
     return () => clearInterval(typingInterval);
   }, [text]);
