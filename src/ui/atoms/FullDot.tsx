@@ -5,18 +5,11 @@ interface FullDotProps {
   x: number;
   y: number;
   onClick: () => void;
-  children: React.ReactNode;
   title: string;
   id: string;
 }
 
-export const FullDot: React.FC<FullDotProps> = ({
-  x,
-  y,
-  title,
-  children,
-  onClick,
-}) => {
+export const FullDot: React.FC<FullDotProps> = ({ x, y, title, onClick }) => {
   return (
     <div style={{ position: 'relative' }}>
       <div
