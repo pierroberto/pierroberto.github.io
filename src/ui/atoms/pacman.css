@@ -1,5 +1,5 @@
 body {
-  background: #222;
+  background: #070600;
   color: #ddd;
   font-family: Exo;
   text-shadow: 0 -1px 0 #000;
@@ -72,7 +72,7 @@ h2 {
 }
 
 .pacman-mouth .pacman {
-  background-color: #222;
+  background-color: #070600;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
@@ -82,7 +82,7 @@ h2 {
   animation: munch 0.5s linear infinite;
 
   /* To fix a yellow border on pacman's mouth */
-  border: 3px solid #222;
+  border: 3px solid #070600;
 }
 
 @-moz-keyframes munch {

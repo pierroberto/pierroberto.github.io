@@ -10,7 +10,7 @@ import { Coordinates } from '../../models/Coordinates';
 import pacmanMouthSrc from '../../assets/pacmanMouth.wav';
 import { useWithSound } from '../../hooks/withSound';
 import { dots } from '../../state/dots';
-
+import linkedinSrc from '../../../src/assets/linkedin.png';
 type KeyArrow = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 
 const rotate = (key: KeyArrow, defaultDeg: number) => {
@@ -74,7 +74,6 @@ export const App: React.FC = () => {
   const [pacmanPosition, setPacmanPosition] = useState({ x: 0, y: 0 });
   const [audioEnabled, setAudioEnabled] = useState(false);
   const playMouthSound = useWithSound(pacmanMouthSrc);
-  const [score, setScore] = useState(0);
   const [angle, setAngle] = useState<SetAngle>({
     deg: 0,
     key: 'ArrowRight',
@@ -165,7 +164,6 @@ export const App: React.FC = () => {
             );
           }
         });
-
         setFullDots(updatedDots);
       }
     }
@@ -173,10 +171,20 @@ export const App: React.FC = () => {
 
   return (
     <div className="App">
+      <div className="score">
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => setAudioEnabled((prev) => !prev)}
+        >
+          Sound {audioEnabled ? 'enabled' : 'disabled'}
+        </div>
+        <div>
+          <img alt="linkedin" src={linkedinSrc} width={40} height={40} />
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',
-          height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
@@ -187,6 +195,7 @@ export const App: React.FC = () => {
             border: 'thick double #1919A6',
             width: '500px',
             height: '500px',
+            backgroundColor: '#070600',
           }}
         >
           <Pacman x={pacmanPosition.x} y={pacmanPosition.y} angle={angle.deg} />
@@ -221,15 +230,7 @@ export const App: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="score">
-        Score: {score}{' '}
-        <div
-          style={{ cursor: 'pointer' }}
-          onClick={() => setAudioEnabled((prev) => !prev)}
-        >
-          Sound {audioEnabled ? 'enabled' : 'disabled'}
-        </div>{' '}
-      </div>
+
       <div className="terminal">
         {selectedDot && <Terminal text={selectedDot.text} />}
       </div>
